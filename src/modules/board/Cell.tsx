@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import { useSnakeContext } from "../snake/Snake.context";
 import { useMemo } from "react";
+import { useGameContext } from "../game/Game.context";
 
 type CellProps = {
   positionX: number;
@@ -8,7 +8,7 @@ type CellProps = {
 };
 
 export const Cell: React.FC<CellProps> = ({ positionX, positionY }) => {
-  const { body: snakeBody } = useSnakeContext();
+  const { snakeBody, food } = useGameContext();
 
   const snakeBodyPartIndexOverThisCell = useMemo(() => {
     return snakeBody.findIndex(
@@ -25,6 +25,15 @@ export const Cell: React.FC<CellProps> = ({ positionX, positionY }) => {
     return snakeBodyPartIndexOverThisCell > 0;
   }, [snakeBodyPartIndexOverThisCell]);
 
+  const isFood = useMemo(() => {
+    return (
+      food.findIndex(
+        (foodPosition) =>
+          foodPosition.x === positionX && foodPosition.y === positionY,
+      ) >= 0
+    );
+  }, [food, positionX, positionY]);
+
   const cellColor = useMemo(() => {
     if (isSnakeHead) {
       return "#ccc";
@@ -34,8 +43,12 @@ export const Cell: React.FC<CellProps> = ({ positionX, positionY }) => {
       return "#ddd";
     }
 
+    if (isFood) {
+      return "red";
+    }
+
     return "#fff";
-  }, [isSnakeBody, isSnakeHead]);
+  }, [isFood, isSnakeBody, isSnakeHead]);
 
   return (
     <Box
@@ -50,6 +63,7 @@ export const Cell: React.FC<CellProps> = ({ positionX, positionY }) => {
         color: "#ccc",
         fontSize: "16px",
         background: cellColor,
+        lineHeight: "50px",
       }}
     >
       [{positionX}, {positionY}]

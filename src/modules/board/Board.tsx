@@ -1,37 +1,34 @@
 import { Box } from "@mui/material";
 import { useMemo } from "react";
 import { Cell } from "./Cell";
-import { SnakeController } from "../snake/SnakeController";
+import { useGameContext } from "../game/Game.context";
 
-type BoardProps = {
-  width: number;
-  height: number;
-};
+export const Board: React.FC = () => {
+  const {
+    board: { height: boardHeight, width: boardWidth },
+  } = useGameContext();
 
-export const Board: React.FC<BoardProps> = ({ width, height }) => {
   const boardRows = useMemo(() => {
-    return [...Array(height).keys()];
-  }, [height]);
+    return [...Array(boardHeight).keys()];
+  }, [boardHeight]);
 
   const boardColumns = useMemo(() => {
-    return [...Array(width).keys()];
-  }, [width]);
+    return [...Array(boardWidth).keys()];
+  }, [boardWidth]);
 
   return (
-    <SnakeController>
-      <Box>
-        {boardRows.map((positionY) => (
-          <Box key={positionY}>
-            {boardColumns.map((positionX) => (
-              <Cell
-                positionX={positionX}
-                positionY={positionY}
-                key={`${positionY}-${positionX}`}
-              />
-            ))}
-          </Box>
-        ))}
-      </Box>
-    </SnakeController>
+    <Box>
+      {boardRows.map((positionY) => (
+        <Box key={positionY}>
+          {boardColumns.map((positionX) => (
+            <Cell
+              positionX={positionX}
+              positionY={positionY}
+              key={`${positionY}-${positionX}`}
+            />
+          ))}
+        </Box>
+      ))}
+    </Box>
   );
 };

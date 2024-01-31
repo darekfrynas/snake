@@ -1,6 +1,6 @@
 import CssBaseline from "@mui/material/CssBaseline";
-import { Board } from "./modules/board/Board";
 import { Container } from "@mui/material";
+import { Game } from "./modules/game/Game";
 
 const App = () => {
   return (
@@ -8,7 +8,7 @@ const App = () => {
       <CssBaseline />
 
       <Container maxWidth="lg" sx={{ pt: 4 }}>
-        <Board width={10} height={10} />
+        <Game />
       </Container>
     </>
   );
