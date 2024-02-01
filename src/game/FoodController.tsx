@@ -8,7 +8,7 @@ import { BOARD_HEIGHT, BOARD_WIDTH } from "./settings";
 export const FoodController = () => {
   const isInitialFoodSpawned = useBoolean(false);
 
-  const { snakeBody, setSnakeBody, food, setFood, snakeSpeed } =
+  const { snakeBody, setSnakeBody, food, setFood, snakeSpeed, setPoints } =
     useGameContext();
 
   const removeFood = useCallback(
@@ -76,9 +76,18 @@ export const FoodController = () => {
     if (foodToConsume) {
       removeFood(foodToConsume);
       growSnakeBody();
+      setPoints((prevPoints) => prevPoints + 1);
       spawnFreshFood();
     }
-  }, [growSnakeBody, food, snakeBody, setFood, removeFood, spawnFreshFood]);
+  }, [
+    growSnakeBody,
+    food,
+    snakeBody,
+    setFood,
+    removeFood,
+    spawnFreshFood,
+    setPoints,
+  ]);
 
   return null;
 };

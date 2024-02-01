@@ -14,6 +14,8 @@ export type GameContextType = {
   setSnakeDirection: SetState<Directions>;
   snakeSpeed: number | null;
   setSnakeSpeed: SetState<number | null>;
+  points: number;
+  setPoints: SetState<number>;
 };
 
 export enum Directions {
