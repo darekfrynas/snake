@@ -3,11 +3,12 @@ import { useGameContext } from "./Game.context";
 import { useBoolean } from "usehooks-ts";
 import random from "lodash/random";
 import { CellPosition } from "./types";
+import { BOARD_HEIGHT, BOARD_WIDTH } from "./settings";
 
 export const FoodController = () => {
   const isInitialFoodSpawned = useBoolean(false);
 
-  const { snakeBody, setSnakeBody, food, setFood, board, snakeSpeed } =
+  const { snakeBody, setSnakeBody, food, setFood, snakeSpeed } =
     useGameContext();
 
   const removeFood = useCallback(
@@ -27,12 +28,12 @@ export const FoodController = () => {
       return [
         ...prevFood,
         {
-          x: random(0, board.width - 1),
-          y: random(0, board.height - 1),
+          x: random(0, BOARD_WIDTH - 1),
+          y: random(0, BOARD_HEIGHT - 1),
         },
       ];
     });
-  }, [board.height, board.width, setFood]);
+  }, [setFood]);
 
   const growSnakeBody = useCallback(
     (newCellsToGrow: number = 1) => {
@@ -57,21 +58,13 @@ export const FoodController = () => {
     if (!isInitialFoodSpawned.value && !food.length && snakeSpeed) {
       setFood([
         {
-          x: random(0, board.width - 1),
-          y: random(0, board.height - 1),
+          x: random(0, BOARD_WIDTH - 1),
+          y: random(0, BOARD_HEIGHT - 1),
         },
       ]);
       isInitialFoodSpawned.setTrue();
     }
-  }, [
-    board.height,
-    board.width,
-    food.length,
-    isInitialFoodSpawned,
-    setFood,
-    snakeSpeed,
-    spawnFreshFood,
-  ]);
+  }, [food.length, isInitialFoodSpawned, setFood, snakeSpeed, spawnFreshFood]);
 
   // When head cell goes over food cell, it's time to grow
   useEffect(() => {
