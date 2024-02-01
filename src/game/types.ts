@@ -5,19 +5,7 @@ export type CellPosition = {
   y: number;
 };
 
-type GameSettings = {
-  moveMode: "auto" | "manual";
-};
-
-type BoardStateType = {
-  width: number;
-  height: number;
-  cellSize: number;
-};
-
 export type GameContextType = {
-  settings: GameSettings;
-  board: BoardStateType;
   snakeBody: CellPosition[];
   setSnakeBody: SetState<CellPosition[]>;
   food: CellPosition[];

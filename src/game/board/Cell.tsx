@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { useMemo } from "react";
-import { useGameContext } from "../game/Game.context";
+import { useGameContext } from "../Game.context";
+import { CELL_SIZE } from "../settings";
 
 type CellProps = {
   positionX: number;
@@ -54,19 +55,15 @@ export const Cell: React.FC<CellProps> = ({ positionX, positionY }) => {
     <Box
       sx={{
         display: "inline-block",
-        width: "50px",
-        height: "50px",
-        border: "1px solid black",
-        ml: "-1px",
-        mt: "-1px",
+        width: `${CELL_SIZE}px`,
+        height: `${CELL_SIZE}px`,
         textAlign: "center",
         color: "#ccc",
-        fontSize: "16px",
+        fontSize: "10px",
         background: cellColor,
-        lineHeight: "50px",
+        lineHeight: `${CELL_SIZE}px`,
+        overflow: "hidden",
       }}
-    >
-      [{positionX}, {positionY}]
-    </Box>
+    />
   );
 };
