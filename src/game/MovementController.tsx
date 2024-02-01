@@ -1,11 +1,16 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { ArrowKeys, Directions } from "./types";
 import { useGameContext } from "./Game.context";
 import { useInterval } from "usehooks-ts";
 
 export const MovementController = () => {
-  const { setSnakeBody, snakeDirection, setSnakeDirection, snakeSpeed } =
-    useGameContext();
+  const {
+    snakeBody,
+    setSnakeBody,
+    snakeDirection,
+    setSnakeDirection,
+    snakeSpeed,
+  } = useGameContext();
 
   const moveBy = useCallback(
     (x: number, y: number) => {
@@ -17,6 +22,32 @@ export const MovementController = () => {
       });
     },
     [setSnakeBody],
+  );
+
+  const allowedDirections = useMemo(() => {
+    const snakeHead = snakeBody[0];
+    const snakeNeck = snakeBody[1];
+
+    if (snakeNeck.x > snakeHead.x) {
+      return [Directions.DOWN, Directions.UP, Directions.LEFT];
+    } else if (snakeNeck.x < snakeHead.x) {
+      return [Directions.DOWN, Directions.UP, Directions.RIGHT];
+    } else {
+      if (snakeNeck.y > snakeHead.y) {
+        return [Directions.UP, Directions.LEFT, Directions.RIGHT];
+      } else {
+        return [Directions.DOWN, Directions.LEFT, Directions.RIGHT];
+      }
+    }
+  }, [snakeBody]);
+
+  const updateDirection = useCallback(
+    (newDirection: Directions) => {
+      if (allowedDirections.includes(newDirection)) {
+        setSnakeDirection(newDirection);
+      }
+    },
+    [allowedDirections, setSnakeDirection],
   );
 
   useInterval(() => {
@@ -44,24 +75,24 @@ export const MovementController = () => {
     (event: KeyboardEvent) => {
       switch (event.key) {
         case ArrowKeys.UP: {
-          setSnakeDirection(Directions.UP);
+          updateDirection(Directions.UP);
           break;
         }
         case ArrowKeys.DOWN: {
-          setSnakeDirection(Directions.DOWN);
+          updateDirection(Directions.DOWN);
           break;
         }
         case ArrowKeys.RIGHT: {
-          setSnakeDirection(Directions.RIGHT);
+          updateDirection(Directions.RIGHT);
           break;
         }
         case ArrowKeys.LEFT: {
-          setSnakeDirection(Directions.LEFT);
+          updateDirection(Directions.LEFT);
           break;
         }
       }
     },
-    [setSnakeDirection],
+    [updateDirection],
   );
 
   useEffect(() => {
