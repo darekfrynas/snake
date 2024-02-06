@@ -6,8 +6,6 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import { useCallback } from "react";
-import { GAME_START_DELAY } from "../settings";
 import { useGameContext } from "../Game.context";
 
 type GameResultDialogProps = {
