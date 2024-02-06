@@ -1,13 +1,10 @@
 import { useCallback, useEffect } from "react";
 import { useGameContext } from "./Game.context";
-import { useBoolean } from "usehooks-ts";
 import random from "lodash/random";
 import { CellPosition } from "./types";
 import { BOARD_HEIGHT, BOARD_WIDTH } from "./settings";
 
 export const FoodController = () => {
-  const isInitialFoodSpawned = useBoolean(false);
-
   const { snakeBody, setSnakeBody, food, setFood, snakeSpeed, setPoints } =
     useGameContext();
 
@@ -55,16 +52,15 @@ export const FoodController = () => {
 
   // Spawn fresh food just after game starts
   useEffect(() => {
-    if (!isInitialFoodSpawned.value && !food.length && snakeSpeed) {
+    if (!food.length && snakeSpeed) {
       setFood([
         {
           x: random(0, BOARD_WIDTH - 1),
           y: random(0, BOARD_HEIGHT - 1),
         },
       ]);
-      isInitialFoodSpawned.setTrue();
     }
-  }, [food.length, isInitialFoodSpawned, setFood, snakeSpeed, spawnFreshFood]);
+  }, [food.length, setFood, snakeSpeed, spawnFreshFood]);
 
   // When head cell goes over food cell, it's time to grow
   useEffect(() => {

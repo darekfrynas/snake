@@ -2,14 +2,16 @@ import { useCallback, useEffect, useMemo } from "react";
 import { ArrowKeys, Directions } from "./types";
 import { useGameContext } from "./Game.context";
 import { useInterval } from "usehooks-ts";
+import { MAX_SNAKE_SPEED } from "./settings";
 
 export const MovementController = () => {
   const {
+    points,
     snakeBody,
     setSnakeBody,
     snakeDirection,
     setSnakeDirection,
-    snakeSpeed,
+    snakeSpeed: snakeBaseSpeed,
   } = useGameContext();
 
   const moveBy = useCallback(
@@ -50,27 +52,6 @@ export const MovementController = () => {
     [allowedDirections, setSnakeDirection],
   );
 
-  useInterval(() => {
-    switch (snakeDirection) {
-      case Directions.UP: {
-        moveBy(0, -1);
-        break;
-      }
-      case Directions.DOWN: {
-        moveBy(0, 1);
-        break;
-      }
-      case Directions.RIGHT: {
-        moveBy(1, 0);
-        break;
-      }
-      case Directions.LEFT: {
-        moveBy(-1, 0);
-        break;
-      }
-    }
-  }, snakeSpeed);
-
   const onDirectionChange = useCallback(
     (event: KeyboardEvent) => {
       switch (event.key) {
@@ -102,6 +83,35 @@ export const MovementController = () => {
       window.removeEventListener("keydown", onDirectionChange);
     };
   }, [onDirectionChange]);
+
+  const snakeSpeed = useMemo(() => {
+    if (snakeBaseSpeed !== null) {
+      return Math.max(snakeBaseSpeed - points * 5, MAX_SNAKE_SPEED);
+    }
+
+    return snakeBaseSpeed;
+  }, [points, snakeBaseSpeed]);
+
+  useInterval(() => {
+    switch (snakeDirection) {
+      case Directions.UP: {
+        moveBy(0, -1);
+        break;
+      }
+      case Directions.DOWN: {
+        moveBy(0, 1);
+        break;
+      }
+      case Directions.RIGHT: {
+        moveBy(1, 0);
+        break;
+      }
+      case Directions.LEFT: {
+        moveBy(-1, 0);
+        break;
+      }
+    }
+  }, snakeSpeed);
 
   return null;
 };
